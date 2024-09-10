@@ -1,0 +1,74 @@
+#FIND POD'S NAMESPACE AND CONTEXT AND COMMANDS TO QUERY IT
+POD_NAME=""
+SPECIFIED_CONTEXT=""  # Set this to your context name, or leave it empty to search all contexts
+
+if [[ -n "$SPECIFIED_CONTEXT" ]]; then
+    # If SPECIFIED_CONTEXT is set, use that context
+    contexts="$SPECIFIED_CONTEXT"
+else
+    # If SPECIFIED_CONTEXT is not set, iterate through all contexts
+    contexts=$(kubectl config get-contexts -o name)
+fi
+
+for context in $contexts; do
+    echo "Checking in context: $context"
+    
+    result=$(kubectl --context="$context" get pods --all-namespaces | grep $POD_NAME)
+    
+    if [[ ! -z "$result" ]]; then
+        namespace=$(echo $result | awk '{print $1}')
+        found_pod=$(echo $result | awk '{print $2}')
+        
+        echo "Pod found in context: $context, namespace: $namespace"
+        
+        # Print out the kubectl command to get and describe the pod
+        echo "kubectl --context=$context get pod -n $namespace $found_pod"
+        echo "kubectl --context=$context describe pod -n $namespace $found_pod"
+        
+        # Get the number of containers in the pod
+        containers=$(kubectl --context=$context get pod $found_pod -n $namespace -o jsonpath="{.spec.containers[*].name}" )
+
+        echo "Containers found: $containers"
+
+    fi
+done
+
+
+
+
+
+
+
+
+# CLUSTER STATS WITH HIGHEST POD RESOURCES USED 
+
+
+
+CONTEXT=""  # Replace with your context, or leave empty to iterate over all contexts
+
+if [[ -n "$CONTEXT" ]]; then
+    echo "Checking top 5 resource usage in context: $CONTEXT"
+    
+    echo "Top 5 Pods by CPU Usage:"
+    kubectl --context="$CONTEXT" top pods --all-namespaces --sort-by=cpu | head -n 6
+
+    echo "Top 5 Pods by Memory Usage:"
+    kubectl --context="$CONTEXT" top pods --all-namespaces --sort-by=memory | head -n 6
+else
+    for context in $(kubectl config get-contexts -o name); do
+        echo "Checking top 5 resource usage in context: $context"
+        
+        echo "Top 5 Pods by CPU Usage:"
+        kubectl --context="$context" top pods --all-namespaces --sort-by=cpu | head -n 6
+        
+        echo "Top 5 Pods by Memory Usage:"
+        kubectl --context="$context" top pods --all-namespaces --sort-by=memory | head -n 6
+        echo
+    done
+fi
+
+
+
+
+
+
