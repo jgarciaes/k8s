@@ -1,0 +1,96 @@
+kubectl <action> <resource> <resource-name> [flags/parameters]
+
+
+Action	Description
+create	Create a resource from scratch.
+get	Retrieve information about one or more resources.
+describe	Get detailed information about a resource, including its state and events.
+apply	Apply changes to a resource from a YAML/JSON file.
+delete	Delete a resource.
+edit	Edit a resource directly in your default text editor (modifies the live configuration).
+logs	View logs of a pod or container.
+exec	Execute a command in a container within a pod.
+scale	Change the number of replicas for a deployment, replica set, or statefulset.
+expose	Create a service to expose a pod or deployment.
+port-forward	Forward local ports to a pod.
+rollout	Manage the rollout of a deployment (e.g., check status, pause, resume, undo).
+get	Fetch details of resources (e.g., pods, deployments, services, etc.).
+top	View resource usage (CPU, memory) for nodes or pods.
+apply	Apply configuration changes from a file (or stdin).
+patch	Patch a resource (usually for minor changes).
+annotate	Add or update annotations for a resource.
+label	Add or update labels for a resource.
+cordon	Mark a node as unschedulable (won’t accept new pods).
+drain	Drain a node by evicting all the pods.
+taint	Apply a taint to a node.
+cluster-info	Display information about the cluster.
+version	Display version information about the kubectl and the Kubernetes API server.
+
+
+
+Resource	Shorthand	Description
+pod	po	The smallest deployable unit in Kubernetes, representing a container or group.
+deployment	deploy	Ensures that a specified number of pod replicas are running.
+service	svc	Exposes pods to external traffic or within the cluster.
+configmap	cm	Stores non-confidential configuration data as key-value pairs.
+secret	sec	Stores sensitive information, like passwords or API keys.
+namespace	ns	Virtual clusters within a Kubernetes cluster to separate resources.
+job		Manages one-off tasks, ensuring a specified number of completions.
+cronjob		Runs jobs on a schedule (cron syntax).
+node		A worker machine in Kubernetes.
+replicaset	rs	Ensures a specified number of pod replicas are running, often managed by a deployment.
+statefulset	sts	Manages stateful applications (e.g., databases), providing stable identifiers.
+persistentvolume	pv	Storage resource in the cluster.
+persistentvolumeclaim	pvc	Requests storage from a PersistentVolume.
+daemonset	ds	Ensures that a pod is running on each node.
+ingress		Manages external access to services (e.g., via HTTP/HTTPS routing).
+serviceaccount	sa	Defines an account for processes running in pods.
+role		Defines permissions for resources within a namespace.
+clusterrole		Defines permissions for resources across the cluster.
+rolebinding		Grants the permissions defined by a Role to users or groups within a namespace.
+clusterrolebinding		Grants the permissions defined by a ClusterRole to users or groups cluster-wide.
+
+
+3. Common Parameters/Flags ([flags/parameters])
+Flag	Description
+-n, --namespace	Specify the namespace of the resource.
+-o, --output	Output format (json, yaml, wide, name).
+--kubeconfig	Specify the kubeconfig file to use.
+-l, --selector	Filter resources by label (e.g., -l app=my-app).
+-f, --filename	Path to a file or directory containing YAML/JSON configuration.
+--all	Select all resources of a given type (e.g., kubectl delete pods --all).
+--dry-run=client	Preview the operation without making any changes to the cluster (useful for testing commands).
+--record	Record the command executed in the resource’s annotations (useful for auditing).
+--field-selector	Filter resources based on field selectors (e.g., spec.nodeName=worker-node).
+--force	Force delete a resource or action (e.g., delete a pod without waiting for graceful shutdown).
+--context	Specify which kubeconfig context to use (if you have multiple clusters).
+-R, --recursive	If passed a directory, recursively apply files within it.
+--timeout	Specify a timeout duration for operations (e.g., --timeout=30s).
+
+
+
+Pod-Specific Flags (kubectl run)
+Flag	Description
+--image	Specifies the container image to run inside the pod.
+--port	Expose the container’s port (e.g., --port=80).
+--env	Set environment variables (e.g., --env="ENV_VAR=value").
+--restart	Set pod restart policy (Always, OnFailure, Never).
+--command	Treat the arguments to the pod as the actual command to run.
+
+Deployment-Specific Flags (kubectl create deployment)
+Flag	Description
+--replicas	Number of pod replicas for the deployment (e.g., --replicas=3).
+--image	Specify the container image (e.g., --image=nginx).
+--dry-run=client	Output the object as YAML without applying it.
+--port	Define the port for the deployment.
+
+Service-Specific Flags (kubectl expose)
+Flag	Description
+--port	Specify the port that the service will expose.
+--target-port	Specify the container port to target.
+--type	Specify the service type (ClusterIP, NodePort, LoadBalancer).
+
+Job/CronJob-Specific Flags
+Flag	Description
+--schedule	Cron schedule format for a CronJob.
+--restart	Restart policy (OnFailure, Never) for jobs.
